@@ -2,7 +2,7 @@ import cv2
 
 def loopscan():
     
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture("http://192.168.0.7:8081/video.mjpg")
     # initialize the cv2 QRCode detector
     detector = cv2.QRCodeDetector()
 
