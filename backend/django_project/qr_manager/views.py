@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from rest_framework import status
 import datetime
 import secrets
+import qrcode
 
 # Create your views here.
 def home(request):
@@ -56,7 +57,7 @@ def create_qrcode(request):
         new_code["date_created"] = datetime.datetime.today().date()
         new_code["name"] = request.data["name"]
         new_code["date_finish"] = request.data["date_finish"]
-        new_code["token"] = secrets.token_urlsafe(32)
+        new_code["token"] = secrets.token_urlsafe(16)
 
 
         serializer = QrCodeSerializer(data = new_code)
@@ -64,3 +65,22 @@ def create_qrcode(request):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(["GET"])
+def get_image(request, id):
+
+    try:
+        qrcode_instance = QrCode.objects.get(pk=id)
+    except QrCode.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+        
+    if request.method == "GET":
+        serializer = QrCodeSerializer(qrcode_instance)
+        token = serializer.data["token"]
+
+        img = qrcode.make(token)
+
+        response = HttpResponse(content_type='image/png')
+
+        img.save(response, 'png')
+        return response
