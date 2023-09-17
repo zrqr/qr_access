@@ -11,3 +11,10 @@ python manage.py runserver
 ## when updating data model
 python manage.py makemigrations
 <br>python manage.py migrate
+
+## Install vscode extention
+Thunder Client
+<br> to test the API
+
+## API endpoints can be found in 
+backend/django_project/qr_manager/urls.py
