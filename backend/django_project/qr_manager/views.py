@@ -15,6 +15,7 @@ def home(request):
 
 @api_view(["GET"])
 def qr_codes_all(request):
+
     if request.method == "GET":
         qrcodes = QrCode.objects.all()
         serializer = QrCodeSerializer(qrcodes, many=True)
@@ -79,25 +80,29 @@ def get_image(request, id):
         img.save(response, 'png')
         return response
 
-@api_view(["GET"])  
-def check_code(request, token:str):
+def check_qrcode(token:str):
 
     try:
         token_filter = QrCode.objects.filter(token=token)
         if token_filter.count() == 0:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
+            return status.HTTP_401_UNAUTHORIZED
         else:
             qrcode_instance = QrCode.objects.filter(id__in=token_filter.values('id'))[0]
     
-        if request.method == "GET":
             serializer = QrCodeSerializer(qrcode_instance)
 
             date_finish = datetime.date.fromisoformat(serializer.data["date_finish"])
 
             if date_finish >= datetime.date.today():
-                return Response("Approved", status=status.HTTP_200_OK)
+                return status.HTTP_200_OK
             else:
-                return Response("Past due", status=status.HTTP_410_GONE)
+                return status.HTTP_410_GONE
         
     except:
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return status.HTTP_400_BAD_REQUEST
+
+
+@api_view(["GET"])  
+def check_code(request, token:str):
+
+    return Response(status=check_qrcode(token))
