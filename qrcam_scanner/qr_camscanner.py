@@ -1,4 +1,5 @@
 import cv2
+from ..backend.django_project.qr_manager.models import QrCode
 
 def loopscan():
     
@@ -16,8 +17,8 @@ def loopscan():
             print(data)
             break
 
-
-        cv2.imshow("QRCODEscanner", img)    
+                
+        #cv2.imshow("QRCODEscanner", img)    
         if cv2.waitKey(1) == ord("q"):
             break
 
