@@ -20,7 +20,6 @@ status = Value("b", False)
 lock = Lock()
 
 def process_image(img, detector):
-
     token, bbox, _ = detector.detectAndDecode(img)
 
     # check if there is a QRCode in the image
@@ -65,7 +64,8 @@ def loopscan():
         if ret:
             if count % 10 == 0:
                 if queue.qsize() < 5:
-                    queue.put(img)
+                    gray_frame = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+                    queue.put(gray_frame)
                 
             count=count+1
 
