@@ -23,14 +23,13 @@ def process_image(img, detector):
 
     token, bbox, _ = detector.detectAndDecode(img)
 
-    
     # check if there is a QRCode in the image
     if token:
         lock.acquire(timeout=1)
         ret = check_qrcode(token)
+        lock.release()
         print(ret)
         if ret == 200:
-            print("It is open")
             return True
         if ret == 401:
             print("Unauthorized")
@@ -38,8 +37,6 @@ def process_image(img, detector):
         if ret == 410:
             print("Past Due")
             return False           
-        lock.release()
-        
 
 def process():
     detector = cv2.QRCodeDetector()
@@ -48,7 +45,8 @@ def process():
         if img is not None:
             if process_image(img, detector):
                 status.value = True
-        time.sleep(.1)
+        if status.value:
+            time.sleep(5)
 
 def loopscan():
     print("START")
@@ -66,17 +64,18 @@ def loopscan():
     
         if ret:
             if count % 10 == 0:
-                queue.put(img)
+                if queue.qsize() < 5:
+                    queue.put(img)
                 
-                if status.value:
-                    status.value = False
-                    while not queue.empty():
-                        queue.get()
-                    gate.open()
+            count=count+1
 
-                    time.sleep(5)
-
-                    count=count+1
+            if status.value:
+                gate.open()
+                print("It is open")
+                while not queue.empty():
+                    queue.get()
+                time.sleep(5) 
+                status.value = False
 
 if __name__ == "__main__":
     loopscan()
