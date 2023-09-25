@@ -1,1 +1,1 @@
-FROM node:20-alpine3.17
+FROM node:20-bullseye
