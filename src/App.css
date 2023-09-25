@@ -1,38 +1,40 @@
+[label react-tabs-component/src/App.css] .tab-list {
+  border-bottom: 1px solid #ccc;
+  padding-left: 0;
+}
+
+.tab-list-item {
+  display: inline-block;
+  list-style: none;
+  margin-bottom: -1px;
+  padding: 0.5rem 0.75rem;
+}
+
+.tab-list-active {
+  background-color: white;
+  border: solid #ccc;
+  border-width: 1px 1px 0 1px;
+}
+
+.resizedTextbox {width: 600px; height: 20px}
+
 .App {
-  text-align: center;
+  display: flex;
+  flex-direction: column; /* Stack the task containers vertically */
+  align-items: center; /* Center align the task containers horizontally */
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.rtsp-page {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.qr-card {
+  display: flex;
+  justify-content: space-between; /* Add space between task cards */
+  margin-bottom: 16px; /* Add space between task containers vertically */
+  border: 1px solid #ddd; /* Add a border to separate tasks visually */
+  padding: 16px; /* Add padding for spacing */
+  width: 80%; /* Adjust the width as needed */
 }
