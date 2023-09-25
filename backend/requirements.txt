@@ -3,3 +3,4 @@ djangorestframework
 qrcode
 opencv-python
 gpiod
+django-cors-headers
