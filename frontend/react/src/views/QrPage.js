@@ -1,43 +1,37 @@
 import React, { Component } from 'react';
 import QrCard from '../components/QrCard'; // Import the QrCard component
+import axios from 'axios';
 
-const taskDataList = [
-    {
-      name: 'Hospede 1',
-      dateCreated: '2023-09-24',
-      finishDate: '2023-09-30',
-      image: 'https://example.com/image1.jpg',
-    },
-    {
-      name: 'Hospede 2',
-      dateCreated: '2023-09-25',
-      finishDate: '2023-10-05',
-      image: 'https://example.com/image2.jpg',
-    },
-    {
-        name: 'Hospede 3',
-        dateCreated: '2023-09-25',
-        finishDate: '2023-10-05',
-        image: 'https://example.com/image2.jpg',
-      },
-    // Add more tasks as needed
-  ];
 
 class QrPage extends Component {
+  state = {
+    taskDataList: [],
+  };
 
+  componentDidMount() {
+    // Replace this with your API endpoint
+    const apiUrl = 'http://127.0.0.1:8000/qrcodes/';
 
+    axios.get(apiUrl)
+      .then((response) => {
+        this.setState({ taskDataList: response.data });
+      })
+      .catch((error) => {
+        console.error('Error fetching data:', error);
+      });
+  }
 
-    render() {
-        return (
-                <div>
-                     <div className="App">
-                        {taskDataList.map((task, index) => (
-                            <QrCard key={index} task={task} />
-                        ))}
-                    </div>
-                </div>
-            )
-    }
+  render() {
+      return (
+              <div>
+                    <div className="App">
+                      {this.state.taskDataList.map((task, index) => (
+                          <QrCard key={index} task={task} />
+                      ))}
+                  </div>
+              </div>
+          )
+  }
 
 } ;
 
