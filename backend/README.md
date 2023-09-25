@@ -5,7 +5,7 @@ django-admin startproject <django project name>
 ## To create a new app 
 python manage.py startapp <AppName>
 ## To start Server
-python manage.py runserver
+python manage.py runserver 172.17.0.2:8000
 <br>Ctrl+C to stop
 
 ## when updating data model
