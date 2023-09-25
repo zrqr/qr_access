@@ -1,20 +1,13 @@
-# Useful django commands
-## How to create a django project (No need to run this)
-django-admin startproject <django project name>
+## Create a docker network
+docker network create qrnet
 
-## To create a new app 
-python manage.py startapp <AppName>
-## To start Server
-python manage.py runserver
-<br>Ctrl+C to stop
+## Create container django
+cd backend
+docker build . -t django 
+## Create container react
+cd frontend
+docker build . -t react
 
-## when updating data model
-python manage.py makemigrations
-<br>python manage.py migrate
-
-## Install vscode extention
-Thunder Client
-<br> to test the API
-
-## API endpoints can be found in 
-backend/django_project/qr_manager/urls.py
+## Run containers in the network
+docker run --network=qrnet -it node   
+docker run --network=qrnet -it django   
