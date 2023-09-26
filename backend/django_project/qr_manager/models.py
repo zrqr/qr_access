@@ -9,3 +9,10 @@ class QrCode(models.Model):
 
     def __str__(self):
         return self.name
+
+class CustomVariable(models.Model):
+    name = models.CharField(max_length=255)  # Name of the variable
+    value = models.CharField(max_length=255)  # Value of the variable
+
+    def __str__(self):
+        return self.name
