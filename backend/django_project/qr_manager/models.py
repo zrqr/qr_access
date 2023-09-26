@@ -6,6 +6,7 @@ class QrCode(models.Model):
     date_finish = models.DateField() 
     name = models.CharField(max_length=50)
     token = models.CharField(max_length=300)
+    senha = models.CharField(max_length=7)
 
     def __str__(self):
         return self.name

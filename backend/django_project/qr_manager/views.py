@@ -1,7 +1,7 @@
 from django.shortcuts import render, HttpResponse
 from django.http import JsonResponse
-from .models import QrCode
-from .serializers import QrCodeSerializer
+from .models import QrCode, CustomVariable
+from .serializers import QrCodeSerializer, CustomVariableSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -53,7 +53,7 @@ def create_qrcode(request):
         new_code["name"] = request.data["name"]
         new_code["date_finish"] = request.data["date_finish"]
         new_code["token"] = secrets.token_urlsafe(16)
-
+        new_code["senha"] = f"{str(secrets.randbelow(999999)).zfill(6)}#"
 
         serializer = QrCodeSerializer(data = new_code)
         if serializer.is_valid():
@@ -106,3 +106,25 @@ def check_qrcode(token:str):
 def check_code(request, token:str):
 
     return Response(status=check_qrcode(token))
+
+
+@api_view(["GET", "PUT"])
+def var(request, variable):
+
+    try:
+        serializer = CustomVariable.objects.get(name=variable)
+    except CustomVariable.DoesNotExist:
+        serializer = CustomVariableSerializer(CustomVariable, data = {"name": variable, "value": ""})
+        if serializer.is_valid():
+            serializer.save()
+       
+    if request.method == "GET":
+        serializer = CustomVariableSerializer(serializer, many=True)
+        return JsonResponse(serializer.data, safe=False)
+    
+    if request.method == "PUT":
+        serializer = CustomVariableSerializer(CustomVariable, data = {"name": variable, "value": request.data["value"]})
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
