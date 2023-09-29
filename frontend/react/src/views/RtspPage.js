@@ -1,20 +1,25 @@
-import React, { Component, useState, useEffect } from 'react';
+import React, { Component } from 'react';
 
 class RtspPage extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            rtspData: {}, // State variable to store the data from the API
-        };
+        this.state = {name:"rtsp", value:""};
     }
 
     // Function to fetch data from the API
     fetchRtspData = () => {
+        
         // Replace 'your-api-endpoint' with the actual API endpoint
-        fetch('http://127.0.0.1:8000/var/rtsp')
+        fetch(`http://127.0.0.1:8000/var/rtsp`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
             .then((response) => response.json())
             .then((data) => {
-                this.setState({ rtspData: data["rtsp"] });
+                // Assuming your API returns a dictionary, you can set it directly in the state
+                this.setState(data);
             })
             .catch((error) => {
                 console.error('Error fetching RTSP data:', error);
@@ -28,14 +33,35 @@ class RtspPage extends Component {
 
     // Event handler for the "Save" button
     handleSaveClick = () => {
-        // Access the RTSP address from the fetched data
-        const rtspAddress = this.state.rtspData.rtspAddress;
-        // You can add code here to save the data to the API if needed
-        console.log('RTSP Address:', rtspAddress);
+
+        // Send a PUT request to update the RTSP address
+        fetch(`http://127.0.0.1:8000/var/rtsp`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(this.state),
+        })
+            .then((response) => {
+                if (response.ok) {
+                    console.log('RTSP Address updated successfully');
+                    this.fetchRtspData(); // Fetch updated data after successful update
+                } else {
+                    console.error('Error updating RTSP Address');
+                }
+            })
+            .catch((error) => {
+                console.error('Error updating RTSP Address:', error);
+            });
+    };
+
+    handleInputChange = (event) => {
+        // Update the updatedRtspAddress state when the input value changes
+        this.setState({name:"rtsp",  value: event.target.value });
     };
 
     render() {
-        const { rtspData } = this.state;
+        const { name, value } = this.state;
         return (
             <div className='rtsp-page'>
                 <div>
@@ -43,9 +69,13 @@ class RtspPage extends Component {
                     <input
                         type="text"
                         className="resizedTextbox"
-                        value={rtspData.rtspAddress || ''} // Bind input value to the RTSP address
+                        value={value}
+                        onChange={this.handleInputChange}
                     />
                     <button onClick={this.handleSaveClick}>Save</button>
+                </div>
+                <div>
+                    <p>Current RTSP Address: {value}</p>
                 </div>
             </div>
         );
