@@ -1,20 +1,19 @@
 from os import path, environ
 from sys import path as sys_path
 from django import setup
-from gate_controller import GateRelay
+
 import time
 sys_path.append("setting.py")    
 environ.setdefault('DJANGO_SETTINGS_MODULE', 'django_project.settings')
 setup()
 
 import cv2
-from qr_manager.models import QrCode
-from qr_manager.views import check_qrcode
+
+from qr_manager.views import check_qrcode, get_var
 from rest_framework import status
 from multiprocessing.pool import Pool
 from multiprocessing import Queue, Value, Process, Lock
 
-gate = GateRelay()
 queue = Queue()
 status = Value("b", False)
 lock = Lock()
@@ -47,9 +46,13 @@ def process():
         if status.value:
             time.sleep(5)
 
+
 def loopscan():
     print("START")
-    cap = cv2.VideoCapture("http://192.168.0.7:8081/video.mjpg")
+
+    rtsp_address = get_var("rtsp")["value"]
+    print(rtsp_address)
+    cap = cv2.VideoCapture(rtsp_address)
     # initialize the cv2 QRCode detector
 
     count=0
@@ -70,7 +73,7 @@ def loopscan():
             count=count+1
 
             if status.value:
-                gate.open()
+                
                 print("It is open")
                 while not queue.empty():
                     queue.get()

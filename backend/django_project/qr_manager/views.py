@@ -9,6 +9,9 @@ import datetime
 import secrets
 import qrcode
 
+import requests
+ARDUINO_API = "http://192.168.0.18/open_the_gate/"
+
 # Create your views here.
 def home(request):
     return HttpResponse("Hello World !")
@@ -94,6 +97,7 @@ def check_qrcode(token:str):
             date_finish = datetime.date.fromisoformat(serializer.data["date_finish"])
 
             if date_finish >= datetime.date.today():
+                call_open()
                 return status.HTTP_200_OK
             else:
                 return status.HTTP_410_GONE
@@ -110,16 +114,17 @@ def check_pass(password:str):
             return status.HTTP_401_UNAUTHORIZED
         else:
             qrcode_instance = QrCode.objects.filter(id__in=token_filter.values('id'))[0]
-    
+
             serializer = QrCodeSerializer(qrcode_instance)
 
             date_finish = datetime.date.fromisoformat(serializer.data["date_finish"])
 
             if date_finish >= datetime.date.today():
+                call_open()
                 return status.HTTP_200_OK
             else:
                 return status.HTTP_410_GONE
-        
+
     except:
         return status.HTTP_400_BAD_REQUEST
 
@@ -134,15 +139,25 @@ def check_qr(request, token:str):
 
     return Response(status=check_qrcode(token))
 
+def get_var(variable):
+    var_obj = CustomVariable.objects.get(name=variable)
+    serializer = CustomVariableSerializer(var_obj)
+    return serializer.data
+
+
+def call_open():
+
+    todo = {"open": True, "apiKey": "pacatatucotianao"}
+    response = requests.post(ARDUINO_API, json=todo)
+    print(response.status_code)
 
 @api_view(["GET", "PUT"])
 def var(request, variable):
 
     if request.method == "GET":
         try:
-            var_obj = CustomVariable.objects.get(name=variable)
-            serializer = CustomVariableSerializer(var_obj)
-            return JsonResponse(serializer.data, safe=False)
+            value = get_var(variable)
+            return JsonResponse(value, safe=False)
         except CustomVariable.DoesNotExist:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
