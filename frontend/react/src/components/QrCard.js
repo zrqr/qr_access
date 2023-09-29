@@ -12,18 +12,37 @@ function QrCard({ task }) {
   };
 
   const handleDeleteTask = () => {
-    // You can implement your delete logic here
-    // For example, send a request to delete the task on the server
-    // and then remove the task from the UI when the request is successful
+    // Send a DELETE request to the API endpoint
+    fetch(`http://127.0.0.1:8000/qrcodes/${task.id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        // You may need to include authentication headers or other headers here
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Failed to delete task');
+        }
+        // Task deleted successfully, you can perform further actions like updating the UI
+        // Remove the task from the UI or update the task list
+        // For simplicity, I'm just logging a message here
+        console.log('Task deleted successfully');
+      })
+      .catch((error) => {
+        // Handle errors, e.g., display an error message to the user
+        console.error('Error deleting task:', error);
+      });
   };
+  
 
   const resizeFile = async (file) => {
     try {
       const uri = await new Promise((resolve) => {
         Resizer.imageFileResizer(
           file,
-          200, // Width
-          200, // Height
+          300, // Width
+          300, // Height
           "PNG",
           100,  // Quality
           0,
@@ -32,8 +51,8 @@ function QrCard({ task }) {
             resolve(uri);
           },
           "base64",
-          200,
-          200
+          300,
+          300
         );
       });
       setImageSrc(uri); // Update the state with the resized image URI
@@ -64,16 +83,19 @@ function QrCard({ task }) {
 
   return (
     <div className="qr-card">
-      <h2>{task.name}</h2>
       <div>
-        <div>Date Created: {task.date_created}</div>
-        <div>Finish Date: {finishDate}</div>
+        <div className='qr-card-detail'>
+          <h2 className='task-name'>{task.name}</h2>
+          <div>Date Created: {task.date_created}</div>
+          <div>Finish Date: {finishDate}</div>
+          <div>Senha: {task.senha}</div>
+        </div>
+        <div className='qr-buttons'>
+          <button onClick={handleUpdateFinishDate}>Update Finish Date</button>
+          <button onClick={handleDeleteTask}>Delete</button>
+        </div>
       </div>
       {imageSrc && <img src={imageSrc} alt={task.name} />}
-      <div>
-        <button onClick={handleUpdateFinishDate}>Update Finish Date</button>
-        <button onClick={handleDeleteTask}>Delete</button>
-      </div>
     </div>
   );
 }

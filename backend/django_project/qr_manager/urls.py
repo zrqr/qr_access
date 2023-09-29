@@ -7,6 +7,7 @@ urlpatterns = [
     path("qrcodes/<int:id>", views.qr_code_item),
     path("new_code/", views.create_qrcode),
     path("image/<int:id>", views.get_image),
-    path("check/<str:token>", views.check_code), 
+    path("check_qr/<str:token>", views.check_qr), 
+    path("check_password/<str:password>", views.check_password), 
     path("var/<str:variable>", views.var) 
 ]

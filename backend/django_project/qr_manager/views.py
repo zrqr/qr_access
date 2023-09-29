@@ -53,7 +53,7 @@ def create_qrcode(request):
         new_code["name"] = request.data["name"]
         new_code["date_finish"] = request.data["date_finish"]
         new_code["token"] = secrets.token_urlsafe(16)
-        new_code["senha"] = f"{str(secrets.randbelow(999999)).zfill(6)}#"
+        new_code["senha"] = f"{str(secrets.randbelow(999999)).zfill(6)}"
 
         serializer = QrCodeSerializer(data = new_code)
         if serializer.is_valid():
@@ -102,8 +102,35 @@ def check_qrcode(token:str):
         return status.HTTP_400_BAD_REQUEST
 
 
+def check_pass(password:str):
+
+    try:
+        token_filter = QrCode.objects.filter(senha=password)
+        if token_filter.count() == 0:
+            return status.HTTP_401_UNAUTHORIZED
+        else:
+            qrcode_instance = QrCode.objects.filter(id__in=token_filter.values('id'))[0]
+    
+            serializer = QrCodeSerializer(qrcode_instance)
+
+            date_finish = datetime.date.fromisoformat(serializer.data["date_finish"])
+
+            if date_finish >= datetime.date.today():
+                return status.HTTP_200_OK
+            else:
+                return status.HTTP_410_GONE
+        
+    except:
+        return status.HTTP_400_BAD_REQUEST
+
 @api_view(["GET"])  
-def check_code(request, token:str):
+def check_password(request, password:str):
+
+    return Response(status=check_pass(password))
+
+
+@api_view(["GET"])  
+def check_qr(request, token:str):
 
     return Response(status=check_qrcode(token))
 
@@ -111,20 +138,24 @@ def check_code(request, token:str):
 @api_view(["GET", "PUT"])
 def var(request, variable):
 
-    try:
-        serializer = CustomVariable.objects.get(name=variable)
-    except CustomVariable.DoesNotExist:
-        serializer = CustomVariableSerializer(CustomVariable, data = {"name": variable, "value": ""})
-        if serializer.is_valid():
-            serializer.save()
-       
     if request.method == "GET":
-        serializer = CustomVariableSerializer(serializer, many=True)
-        return JsonResponse(serializer.data, safe=False)
-    
+        try:
+            var_obj = CustomVariable.objects.get(name=variable)
+            serializer = CustomVariableSerializer(var_obj)
+            return JsonResponse(serializer.data, safe=False)
+        except CustomVariable.DoesNotExist:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
     if request.method == "PUT":
-        serializer = CustomVariableSerializer(CustomVariable, data = {"name": variable, "value": request.data["value"]})
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        try:
+            var_obj = CustomVariable.objects.get(name=variable)
+            serializer = CustomVariableSerializer(var_obj, data = {"name": variable, "value": request.data["value"]})
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+            
+        except CustomVariable.DoesNotExist:    
+            serializer = CustomVariableSerializer(data = {"name": variable, "value": request.data["value"]})
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_202_ACCEPTED)

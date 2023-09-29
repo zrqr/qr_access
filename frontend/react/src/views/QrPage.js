@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import QrCard from '../components/QrCard'; // Import the QrCard component
+import QrCardGrid from '../components/QrCardGrid'; // Import the QrCardGrid component
 import axios from 'axios';
 
 
@@ -22,15 +22,7 @@ class QrPage extends Component {
   }
 
   render() {
-      return (
-              <div>
-                    <div className="App">
-                      {this.state.taskDataList.map((task, index) => (
-                          <QrCard key={index} task={task} />
-                      ))}
-                  </div>
-              </div>
-          )
+      return (<QrCardGrid tasks={this.state.taskDataList}></QrCardGrid>)
   }
 
 } ;
