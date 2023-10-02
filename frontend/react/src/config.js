@@ -1,5 +1,5 @@
 export const apiUrl = 'http://192.168.0.17:8000';
 
-const apiUrlForQrCodes = `${apiUrl}/qrcodes`;
-const apiUrlForImages = `${apiUrl}/image`;
-const apiUrlForVariables = `${apiUrl}/var`;
+export const apiUrlForQrCodes = `${apiUrl}/qrcodes`;
+export const apiUrlForImages = `${apiUrl}/image`;
+export const apiUrlForVariables = `${apiUrl}/var`;
