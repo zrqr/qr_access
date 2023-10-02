@@ -1,6 +1,3 @@
-## Create a docker network
-docker network create qrnet
-
 ## Create container django
 cd backend
 docker build . -t django 
@@ -9,5 +6,5 @@ cd frontend
 docker build . -t react
 
 ## Run containers in the network
-docker run --network=qrnet -it node   
-docker run --network=qrnet -it django   
+docker run --net=host -it node   
+docker run --net=host -it django   
