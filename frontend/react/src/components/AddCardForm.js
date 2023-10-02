@@ -46,7 +46,7 @@ function AddCardForm({ onAddCard }) {
   };
 
   return (
-    <form className="add-card-form" onSubmit={handleSubmit}>
+    <form className="add-card-form my-custom-form" onSubmit={handleSubmit}>
       <div className="form-group">
         <label htmlFor="name">Name:</label>
         <input

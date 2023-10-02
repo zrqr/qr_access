@@ -84,19 +84,17 @@ function QrCard({ task }) {
 
   return (
     <div className="qr-card">
-      <div>
         <div className='qr-card-detail'>
           <h2 className='task-name'>{task.name}</h2>
           <div>Date Created: {task.date_created}</div>
           <div>Finish Date: {finishDate}</div>
           <div>Senha: {task.senha}</div>
+          {imageSrc && <img src={imageSrc} alt={task.name} />}
+          <div className='qr-buttons'>
+            <button onClick={handleUpdateFinishDate}>Update Finish Date</button>
+            <button onClick={handleDeleteTask}>Delete</button>
+          </div>
         </div>
-        <div className='qr-buttons'>
-          <button onClick={handleUpdateFinishDate}>Update Finish Date</button>
-          <button onClick={handleDeleteTask}>Delete</button>
-        </div>
-      </div>
-      {imageSrc && <img src={imageSrc} alt={task.name} />}
     </div>
   );
 }
