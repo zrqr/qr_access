@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import QrCardGrid from '../components/QrCardGrid'; // Import the QrCardGrid component
-import { apiUrlForQrCodes } from "..config"
+import { apiUrlForQrCodes } from "../config"
 import axios from 'axios';
 
 

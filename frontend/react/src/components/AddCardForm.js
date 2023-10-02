@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { apiUrlForQrCodes } from "..config"
+import { apiUrlForQrCodes } from "../config"
 
 function AddCardForm({ onAddCard }) {
   const [name, setName] = useState('');

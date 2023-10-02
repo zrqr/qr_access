@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { apiUrlForVariables } from "..config"
+import { apiUrlForVariables } from "../config"
 
 class RtspPage extends Component {
     constructor(props) {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Resizer from "react-image-file-resizer";
-import { apiUrlForQrCodes, apiUrlForImages } from "..config"
+import { apiUrlForQrCodes, apiUrlForImages } from "../config"
 
 function QrCard({ task }) {
   const [finishDate, setFinishDate] = useState(task.date_finish);
