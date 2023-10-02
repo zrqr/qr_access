@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { apiUrlForQrCodes } from "..config"
 
 function AddCardForm({ onAddCard }) {
   const [name, setName] = useState('');
@@ -14,7 +15,7 @@ function AddCardForm({ onAddCard }) {
     };
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/new_code/', {
+      const response = await fetch(apiUrlForQrCodes, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Resizer from "react-image-file-resizer";
+import { apiUrlForQrCodes, apiUrlForImages } from "..config"
 
 function QrCard({ task }) {
   const [finishDate, setFinishDate] = useState(task.date_finish);
@@ -13,7 +14,7 @@ function QrCard({ task }) {
 
   const handleDeleteTask = () => {
     // Send a DELETE request to the API endpoint
-    fetch(`http://127.0.0.1:8000/qrcodes/${task.id}`, {
+    fetch(`${apiUrlForQrCodes}/${task.id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -63,7 +64,7 @@ function QrCard({ task }) {
 
   useEffect(() => {
     // Fetch the image from the API when the component mounts
-    fetch(`http://127.0.0.1:8000/image/${task.id}`)
+    fetch(`${apiUrlForImages}/${task.id}`)
       .then((response) => response.blob())
       .then((imageBlob) => {
         // Resize the image and get the resized URI

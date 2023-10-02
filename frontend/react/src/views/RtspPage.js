@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { apiUrlForVariables } from "..config"
 
 class RtspPage extends Component {
     constructor(props) {
@@ -10,7 +11,7 @@ class RtspPage extends Component {
     fetchRtspData = () => {
         
         // Replace 'your-api-endpoint' with the actual API endpoint
-        fetch(`http://127.0.0.1:8000/var/rtsp`, {
+        fetch(`${apiUrlForVariables}/rtsp`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -35,7 +36,7 @@ class RtspPage extends Component {
     handleSaveClick = () => {
 
         // Send a PUT request to update the RTSP address
-        fetch(`http://127.0.0.1:8000/var/rtsp`, {
+        fetch(`${apiUrlForVariables}/rtsp`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',

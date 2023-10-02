@@ -1,8 +1,8 @@
 FROM node:20-bullseye
 
-RUN npm install axios
-RUN npm i react-image-file-resizer
+COPY . /usr/app
+WORKDIR /usr/app 
+RUN npm i react-image-file-resizer axios
 
-COPY . .
 
 CMD bash
