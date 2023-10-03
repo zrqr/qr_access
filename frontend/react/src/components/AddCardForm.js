@@ -10,12 +10,12 @@ function AddCardForm({ onAddCard }) {
 
     // Create a JSON payload with the user input
     const payload = {
-      name,
+      name: name,
       date_finish: dateFinish, // Assuming the API endpoint expects 'date_finish'
     };
 
     try {
-      const response = await fetch(apiUrlForQrCodes, {
+      const response = await fetch(`${apiUrlForQrCodes}/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
