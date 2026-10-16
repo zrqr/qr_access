@@ -4,15 +4,15 @@ A small service that places outbound phone calls for simple inquiries and
 works through automated phone menus (IVR) to reach a person. Speech is turned
 into text and back into speech over Twilio.
 
-Each call opens with a disclosure that it is an automated assistant calling on
-someone's behalf and may be recorded. Check the rules where you are before
-using it, since recording and automated-calling laws vary.
+Each call opens by identifying the assistant as the caller's assistant and
+stating the goal. Check the rules where you are before using it, since
+recording and automated-calling laws vary.
 
 ## How it works
 
 1. `POST /calls` with the number, the caller's name, the goal and an optional
    menu plan. The service places the call through Twilio.
-2. Twilio requests `/twilio/voice`, which says the disclosure and listens.
+2. Twilio requests `/twilio/voice`, which introduces the assistant and listens.
 3. What the other side says or presses is posted to `/twilio/gather`.
    - If it matches a menu option, the matching keypad digits are sent.
    - When a person answers, the goal is stated.

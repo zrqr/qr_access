@@ -8,10 +8,7 @@ from dataclasses import dataclass, field
 from enum import Enum
 import re
 
-DISCLOSURE = (
-    "Hello, this is an automated assistant calling on behalf of {caller}. "
-    "This call may be recorded."
-)
+DISCLOSURE = "Hello, this is {caller}'s assistant calling about {goal}."
 
 
 class ActionKind(str, Enum):
@@ -62,7 +59,7 @@ def match_option(menu: list[MenuOption], speech: str) -> MenuOption | None:
 
 def start(session: CallSession) -> Action:
     """First message of the call: disclosure, then the goal."""
-    opening = DISCLOSURE.format(caller=session.caller_name)
+    opening = DISCLOSURE.format(caller=session.caller_name, goal=session.goal)
     session.transcript.append(f"assistant: {opening}")
     return Action(ActionKind.GATHER, say=opening)
 

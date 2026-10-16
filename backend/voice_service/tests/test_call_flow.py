@@ -13,13 +13,12 @@ def make_session(**overrides):
     return CallSession(**values)
 
 
-def test_start_discloses_it_is_an_automated_assistant():
+def test_start_identifies_itself_as_the_callers_assistant():
     session = make_session()
     action = start(session)
     assert action.kind == ActionKind.GATHER
-    assert "automated assistant" in action.say
-    assert "Pedro" in action.say
-    assert "recorded" in action.say
+    assert "Pedro's assistant" in action.say
+    assert "the opening hours for next week" in action.say
 
 
 def test_menu_speech_presses_matching_digits():

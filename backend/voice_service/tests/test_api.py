@@ -56,7 +56,7 @@ def test_create_call_then_twiml_flow(monkeypatch):
     call_id = created.json()["call_id"]
 
     greeting = api.post(f"/twilio/voice?call_id={call_id}")
-    assert "automated assistant" in greeting.text
+    assert "Pedro's assistant" in greeting.text
     assert "<Gather" in greeting.text
 
     menu = api.post(f"/twilio/gather?call_id={call_id}", data={"SpeechResult": "for billing say two"})
